@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Link from '~/client/components/Link';
-import { CSSTransition, transit } from "react-css-transition";
 
 class Navbar extends React.Component<any, ExpendableState>{
 

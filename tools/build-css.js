@@ -4,8 +4,12 @@ const task = require("./lib/task");
 var sass = require("node-sass");
 const fs = require("fs");
 const path = require("path");
+const chalk = require('chalk');
 const log = console.log;
 var postcss = require("postcss");
+
+const error = chalk.bold.red;
+const info = chalk.bold.green;
 
 const isDebug = !process.argv.includes("--release");
 const isVerbose = process.argv.includes("--verbose");
@@ -16,7 +20,7 @@ module.exports = task("build-css", (src_file, dest_file) => {
   let vendor = path.resolve(
     __dirname,
     "../",
-    "./src/style/bootstrap/bootstrap.scss"
+    "./src/style/lib.scss"
   );
   const destFile = path.resolve(webpackConfig.output.path, "lib.css");
 
@@ -37,8 +41,8 @@ module.exports = task("build-css", (src_file, dest_file) => {
     //   }
     // )
     .then(result => {
-      log('');
       writeFile(destFile, result);
+      log(`build-css ${chalk.bold.yellow(vendor)} -> ${info(destFile)}`);
     }).catch(err => {
       log(err);
     });
@@ -46,7 +50,6 @@ module.exports = task("build-css", (src_file, dest_file) => {
 
 function writeFile(fileName, content) {
   const dirPath = path.dirname(fileName);
-  log('start writing file to ' + dirPath);
   return new Promise((resolve, reject) => {
     mkdirp(dirPath, (err, made) => {
       if (err)
@@ -62,12 +65,11 @@ function writeFile(fileName, content) {
 }
 
 function processSass(options) {
-  log('starting scss')
   return new Promise((resolve, reject) => {
     sass.render(options, function(err, res){
       if (err)
       {
-        console.log(err);
+        log(error(err));
         return reject(err);
       }
       resolve(res.css);
