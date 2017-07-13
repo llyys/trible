@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "moduleResolution": "node",
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noEmitHelpers": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "outDir": "./build",
+    "sourceMap": true,
+    "target": "es6",
+    "traceResolution": false, //to show detail output
+    "jsx": "react",
+
+    //codefixes
+    //"noUnusedLocals": true,
+    //"noUnusedParameters": true,
+
+    "paths": {
+      "~/*": [
+        "./src/*"
+      ],
+      "history": [
+        "./node_modules/@types/history/index"
+      ],
+      "react": [
+        "./node_modules/@types/react/index"
+      ]
+    }
+  },
+  "exclude": [
+    "build",
+    "node_modules",
+    "webpack.config.js"
+  ]
+}

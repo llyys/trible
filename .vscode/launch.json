@@ -1,0 +1,44 @@
+{
+  // Use IntelliSense to learn about possible Node.js debug attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceRoot}/build/server/server.js",
+      "stopOnEntry": false,
+      "cwd": "${workspaceRoot}",
+      "outFiles": ["${workspaceRoot}/build/server/**/*.js"],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "runtimeArgs": [
+        "--nolazy", "--harmony"
+      ],
+      "protocol": "inspector",
+      "preLaunchTask": "tsc",
+      "sourceMaps": true
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Webpack",
+      "program": "${workspaceRoot}/tools/build-client.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch task",
+      "program": "${workspaceRoot}/tools/build-css.js"
+    },
+    {
+      "name": "Attach",
+      "type": "node",
+      "request": "attach",
+      "restart": false
+    }
+  ]
+}

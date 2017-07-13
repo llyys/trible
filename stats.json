@@ -1,0 +1,161 @@
+{
+  "errors": [],
+  "warnings": [],
+  "time": 6433,
+  "publicPath": "/public/",
+  "assetsByChunkName": {
+    "index": [
+      "index.js",
+      "index.css",
+      "index.js.map",
+      "index.css.map"
+    ],
+    "vendor": [
+      "vendor.js",
+      "vendor.js.map"
+    ]
+  },
+  "assets": [
+    {
+      "name": "index.js",
+      "size": 49611,
+      "chunks": [
+        0
+      ],
+      "chunkNames": [
+        "index"
+      ],
+      "emitted": true
+    },
+    {
+      "name": "vendor.js",
+      "size": 994999,
+      "chunks": [
+        1
+      ],
+      "chunkNames": [
+        "vendor"
+      ],
+      "emitted": true,
+      "isOverSizeLimit": true
+    },
+    {
+      "name": "index.css",
+      "size": 490,
+      "chunks": [
+        0
+      ],
+      "chunkNames": [
+        "index"
+      ],
+      "emitted": true
+    },
+    {
+      "name": "index.js.map",
+      "size": 44706,
+      "chunks": [
+        0
+      ],
+      "chunkNames": [
+        "index"
+      ],
+      "emitted": true
+    },
+    {
+      "name": "index.css.map",
+      "size": 1038,
+      "chunks": [
+        0
+      ],
+      "chunkNames": [
+        "index"
+      ],
+      "emitted": true
+    },
+    {
+      "name": "vendor.js.map",
+      "size": 1168816,
+      "chunks": [
+        1
+      ],
+      "chunkNames": [
+        "vendor"
+      ],
+      "emitted": true
+    },
+    {
+      "name": "../manifest.json",
+      "size": 190,
+      "chunks": [],
+      "chunkNames": [],
+      "emitted": true
+    }
+  ],
+  "entrypoints": {
+    "index": {
+      "chunks": [
+        1,
+        0
+      ],
+      "assets": [
+        "vendor.js",
+        "vendor.js.map",
+        "index.js",
+        "index.css",
+        "index.js.map",
+        "index.css.map"
+      ],
+      "isOverSizeLimit": true
+    },
+    "vendor": {
+      "chunks": [
+        1
+      ],
+      "assets": [
+        "vendor.js",
+        "vendor.js.map"
+      ],
+      "isOverSizeLimit": true
+    }
+  },
+  "children": [
+    {
+      "errors": [],
+      "warnings": [],
+      "publicPath": "/dist",
+      "assetsByChunkName": {},
+      "assets": [],
+      "entrypoints": {
+        "undefined": {
+          "chunks": [
+            0
+          ],
+          "assets": [
+            "extract-text-webpack-plugin-output-filename"
+          ]
+        }
+      },
+      "children": [],
+      "name": "extract-text-webpack-plugin C:\\dev\\tsapp\\node_modules\\extract-text-webpack-plugin\\dist C:\\dev\\tsapp\\tools\\webpack\\loaders\\css-loader-module-json.js??ref--1-2!C:\\dev\\tsapp\\node_modules\\css-loader\\index.js??ref--1-3!C:\\dev\\tsapp\\node_modules\\sass-loader\\lib\\loader.js??ref--1-4!C:\\dev\\tsapp\\src\\client\\components\\layout.scss"
+    },
+    {
+      "errors": [],
+      "warnings": [],
+      "publicPath": "/dist",
+      "assetsByChunkName": {},
+      "assets": [],
+      "entrypoints": {
+        "undefined": {
+          "chunks": [
+            0
+          ],
+          "assets": [
+            "extract-text-webpack-plugin-output-filename"
+          ]
+        }
+      },
+      "children": [],
+      "name": "extract-text-webpack-plugin C:\\dev\\tsapp\\node_modules\\extract-text-webpack-plugin\\dist C:\\dev\\tsapp\\tools\\webpack\\loaders\\css-loader-module-json.js??ref--1-2!C:\\dev\\tsapp\\node_modules\\css-loader\\index.js??ref--1-3!C:\\dev\\tsapp\\node_modules\\sass-loader\\lib\\loader.js??ref--1-4!C:\\dev\\tsapp\\src\\style\\global.scss"
+    }
+  ]
+}

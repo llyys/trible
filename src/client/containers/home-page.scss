@@ -1,0 +1,19 @@
+.image{
+  background: #eee;
+  .center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+}
+.card {
+  composes: card from global;
+  float: left;
+  width: 33.333%;
+  padding: .75rem;
+  margin-bottom: 2rem;
+  border: 0;
+}

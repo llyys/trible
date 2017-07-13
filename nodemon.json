@@ -1,0 +1,11 @@
+{
+    "ignore": [
+        ".git",
+        "src/client/**",
+        "tests/*"
+    ],
+    "exec":"ts-node ./src/server/server.ts",
+    "env": {
+      "NODE_ENV": "development"
+    }
+}

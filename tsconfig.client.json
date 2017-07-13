@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig",
+  "exclude": [
+    "src/server/**/*",
+    "node_modules",
+    "build",
+    "webpack.config.js"
+  ]
+}
