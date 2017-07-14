@@ -38,7 +38,7 @@ export const HomePage = () =>
           {Array(6).join().split(",").map((e, i) => {
             return (
             <div className={style.card}>
-              <Img height="280" width="250" />
+              <Img height={280} width={250} />
               <p className="card-text">
                 This is a wider card with supporting text below as a natural
                 lead-in to additional content. This content is a little bit

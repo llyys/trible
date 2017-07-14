@@ -13,6 +13,7 @@ dotenv.config({
 const environment = process.env.NODE_ENV;
 import expressConfig from "./config/express";
 import controllerRoutes from "./config/controllerRoutes";
+import serverController from "./config/serverController";
 import webpackHotReload from "./config/middleware/webpackHotReload";
 
 const server: express.Application = express();
@@ -35,8 +36,11 @@ server.use('/public', express.static(appPath));
 
 
 
-controllerRoutes(server, path.join(__dirname, "./controllers"));
+//controllerRoutes(server, path.join(__dirname, "./controllers"));
 
+
+//since reactRouter uses wild card maching it should be the last controller in registry
+serverController(server);
 server.listen(port, () => {
   console.log(`✓' Express server listening on port ${port}.`);
   clenupHotUpdateFiles();

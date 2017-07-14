@@ -3,6 +3,8 @@ const webpackConfig = require("../webpack.config");
 const tscBuilder = require("./lib/tsc-builder");
 const path = require('path');
 var cpx = require("cpx");
+const log = console.log;
+const chalk = require('chalk');
 
 const task = require('./lib/task');
 module.exports = task('build-server', () => {
@@ -11,8 +13,8 @@ module.exports = task('build-server', () => {
   console.log(`tsc --config=${p}`);
   return tscBuilder(p).then(() => {
     let src = path.resolve(rootDir, './src') + '/**/*.json';
-    console.log('src ' + src);
     let dest = path.resolve(rootDir, './build');
+    console.log(`copy css-metadata  ${chalk.bold.yellow(src)} -> ${chalk.bold.green(dest)}`  );
     return copy(src, dest);
   });
 });

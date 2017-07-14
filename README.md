@@ -1,5 +1,5 @@
 # trible
-universal react bootstrap webapp
+opinionated, universal react bootstrap webapp
 
 ## Installation
 
