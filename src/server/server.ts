@@ -13,6 +13,7 @@ const environment = process.env.NODE_ENV;
 import expressConfig from "./config/express";
 import controllerRoutes from "./config/controllerRoutes";
 import expressController from "./controllers/expressController";
+import authController from "./controllers/authController";
 
 const server: express.Application = express();
 var port = process.env.PORT || 3000;
@@ -41,5 +42,7 @@ server.use('/public', express.static(path.join(rootPath, "/build/public")));
 //controllerRoutes(server, path.join(__dirname, "./controllers"));
 
 //since reactRouter uses wild card maching it should be the last controller in registry
+authController(server);
+
 expressController(server, {port, rootPath});
 export default server;

@@ -1,7 +1,9 @@
 
 //this can be used as
 // app.get('/', wrap(async (req, res) => { ... }))
-let wrap = fn => (...args) => fn(...args).catch(args[2])
+const wrap = fn => (...args) => fn(...args).catch(args[2]);
+export default wrap;
+
 /*
 actually it is the same...
 function wrap (cb) { // 1

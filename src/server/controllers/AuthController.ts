@@ -1,9 +1,21 @@
 import * as express from "express";
+import wrap from "~/server/config/controllerWrap";
+
+
+
+const router = express.Router();
 
 export default app => {
-  app.get("/api", function(req, res, next) {
-    //res.render('home'); // render home page view
-    res.send("welcome to api");
+  // invoked for any requests passed to this router
+  router.use(function(req, res, next) {
+    console.log('%s %s %s', req.method, req.url, req.path);
+    next();
   });
 
+  router.use('/login', wrap(async(req, res) => {
+    res.json({'data':true})
+  }))
+
+
+  app.use("/auth", router);
 }
