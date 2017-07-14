@@ -1,12 +1,14 @@
 import * as express from "express";
 import * as path from "path";
+import * as glob from 'glob';
+import * as fs from 'fs';
 
 import routes from "~/routes";
 import { serverRouter } from "~/server/config/serverRouter";
 import { renderHtml } from "~/server/components/Html";
 const router = serverRouter(routes);
 
-export default app => {
+export default (app, {port, rootPath}) => {
   const manifestFile = path.join(__dirname, "../../manifest.json");
   const manifest = require(manifestFile);
 
@@ -62,4 +64,23 @@ export default app => {
     console.log(`page not found`);
     res.status(404).render("404", { url: req.originalUrl });
   });
+
+  app.listen(port, () => {
+    console.log(`✓' Express server listening on port ${port}.`);
+    clenupHotUpdateFiles();
+  });
+
+
+  function clenupHotUpdateFiles() {
+    const appPath = path.join(rootPath, "/build/public");
+    glob(appPath + "/*.hot-update.*", (err, files) => {
+       files.forEach(function(item,index,array){
+            //console.log(item + " found");
+          fs.unlink(item, function(err){
+                if (err) throw err;
+                console.log(item + " deleted");
+          });
+       });
+    })
+  }
 };
