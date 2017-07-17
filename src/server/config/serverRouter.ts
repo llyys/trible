@@ -1,4 +1,5 @@
 import * as Router from "universal-router";
+//Resolve Universal react routing components in server side
 export function serverRouter(routes) {
 
   function resolveServerRoute(context, params) {
@@ -22,5 +23,7 @@ export function serverRouter(routes) {
 
   return new Router(routes, { resolveRoute:resolveServerRoute });
 }
+
+
 
 

@@ -1,7 +1,9 @@
-export default app => {
-  app.get("/api", function(req, res, next) {
-    //res.render('home'); // render home page view
-    res.send("welcome to api");
-  });
+import { Get, Controller } from "~/server/decorators/Controller";
 
+@Controller("/api")
+export class ApiController {
+  @Get("/")
+  index(req, res){
+    res.send("welcome to api");
+  }
 }
