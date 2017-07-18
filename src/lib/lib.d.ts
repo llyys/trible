@@ -6,6 +6,7 @@ interface NodeRequire {
 
 // Hot Module Replacement API
 //declare var module: { hot: any };
+//declare var process: {env:any};
 
 interface NodeModule {
     hot: any

@@ -5,12 +5,9 @@ import * as fs from 'fs';
 
 import routes from "~/routes";
 import { serverRouter } from "~/server/config/serverRouter";
-import { renderHtml } from "~/server/components/Html";
-const router = serverRouter(routes);
 
+const router = serverRouter(routes);
 export default (app, {port, rootPath}) => {
-  const manifestFile = path.join(__dirname, "../../manifest.json");
-  const manifest = require(manifestFile);
 
   app.get("/*", async function(req: express.Request, res, next) {
     try {
@@ -19,7 +16,6 @@ export default (app, {port, rootPath}) => {
         return;
       }
       console.log(`request ${req.url}`);
-      let state = {};
 
       const context = {
         req: req,
@@ -29,20 +25,9 @@ export default (app, {port, rootPath}) => {
         store: {}
       };
 
-      const manifestItems = Object.keys(manifest).filter(
-        x => !x.endsWith(".map")
-      );
-
-      //Script order is important here, ManifestPlugin does not export elements in order of entries
-      const scripts = [manifest["vendor.js"], manifest["index.js"]];
-
-      const styles = ["lib.css"];
-      manifestItems.filter(x => x.endsWith(".css")).map(item => {
-        styles.push(item);
-      });
-
       let route = await router.resolve(context);
-      renderHtml(res, context.store, route.component, scripts, styles);
+      res.render("Page", {component:route.component, state:context.store, req, res})
+
     } catch (err) {
       console.log(err);
       next();
@@ -56,7 +41,7 @@ export default (app, {port, rootPath}) => {
     if (!module.parent) console.error(err.stack);
 
     // error page
-    res.status(500).render("5xx");
+    res.status(500).render("500", {error:err});
   });
 
   // assume 404 since no middleware responded

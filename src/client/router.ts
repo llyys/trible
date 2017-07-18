@@ -11,7 +11,8 @@ export default new Router(routes, {
     //this function will be rendered only once for initial props loading no more!
     if (typeof route.getInitialProps === 'function' && !route.props) {
       return new Promise((resolve, reject) => {
-        let serverPathProps = context.state[route.path];
+
+        let serverPathProps = context.state && context.state[route.path];
         return resolve(serverPathProps || route.getInitialProps(context))
       })
       .then(props => {

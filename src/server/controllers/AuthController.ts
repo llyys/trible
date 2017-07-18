@@ -1,16 +1,20 @@
 import * as express from "express";
-
-import { Request, Response } from "express";
+import * as passport from 'passport';
+import { Request, Response, Express } from "express";
 import { Controller, Get } from "~/server/decorators/Controller";
-
-const router = express.Router();
+import {oauthCallback} from "~/server/config/passport/passport";
 
 @Controller("/auth")
 export class AuthController{
+  constructor(){
+    
+     }
+
+
   
-  @Get("/login")
-  login(req:Request, res:Response){
-    res.json({'data':true})
+  @Get("/logout")
+  logout(req:Request, res:Response){
+    console.log('logout');
   }
 
   @Get("/error")

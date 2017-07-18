@@ -1,7 +1,6 @@
 import * as express from "express";
 import * as path from "path";
 
-
 import dotenv = require("dotenv");
 require('./config/alias')
 
@@ -15,6 +14,9 @@ import {initialize} from "./config/controllerManager";
 import expressController from "./controllers/expressController";
 import {AuthController} from "./controllers/authController";
 import { ApiController } from "./controllers/ApiController";
+
+import * as passport from "./config/passport/passport"
+
 
 const server: express.Express = express();
 var port = process.env.PORT || 3000;
@@ -43,6 +45,7 @@ server.use('/public', express.static(path.join(rootPath, "/build/public")));
 initialize(server, 
   [AuthController, ApiController]
 ).then(()=>{
+  passport.configureRoutes(server);
   expressController(server, {port, rootPath});
 });
 export default server;
