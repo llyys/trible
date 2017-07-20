@@ -8,7 +8,7 @@ export function createEngine(engineOptions) {
 
   //engineOptions = assign({}, DEFAULT_OPTIONS, engineOptions || {});
 
-  function renderView(filePath, options, cb) {
+  function renderView(filePath:string, options:any, cb) {
     
     try {
       var markup = engineOptions.doctype||'<!doctype html>';
@@ -41,7 +41,7 @@ export function createEngine(engineOptions) {
       }
     }
 
-    cb(null, markup);
+    cb(null, markup); //(err, html)
   }
 
   return renderView;
