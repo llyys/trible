@@ -14,7 +14,22 @@
     "stats": "webpack --env production --profile --json > stats.json",
     "tcm": "tcm -p src/**/*.scss",
     "db-up": "node_modules/db-migrate/bin/db-migrate up --config src/config/database.json -v --migrations-dir ./migrate/migrations -e prod",
+    "test": "jest",
     "server:dev": "tsc && "
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ]
   },
   "author": "",
   "license": "ISC",
@@ -29,13 +44,15 @@
   "devDependencies": {
     "@types/express": "^4.0.36",
     "@types/history": "^4.6.0",
+    "@types/jest": "^20.0.4",
     "@types/node": "^8.0.7",
     "@types/passport": "^0.3.3",
     "@types/react": "^15.0.34",
     "autoprefixer": "^7.1.1",
     "bluebird": "^3.5.0",
-    "bootstrap": "^4.0.0-alpha.6",
     "body-parser": "^1.17.2",
+    "bootstrap": "^4.0.0-alpha.6",
+    "config": "^1.26.1",
     "cookie-parser": "^1.4.3",
     "cpx": "^1.5.0",
     "css-loader": "^0.28.4",
@@ -49,6 +66,7 @@
     "fresh": "^0.5.0",
     "glob": "^7.1.2",
     "helmet": "^3.6.1",
+    "jest": "^20.0.4",
     "mkdirp": "^0.5.1",
     "module-alias": "^2.0.0",
     "node-sass": "^4.5.3",
@@ -67,6 +85,7 @@
     "rimraf": "^2.6.1",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
+    "ts-jest": "^20.0.7",
     "ts-loader": "^2.2.2",
     "tsc-watch": "^1.0.7",
     "tslib": "^1.7.1",

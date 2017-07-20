@@ -1,5 +1,6 @@
 import * as express from "express";
 import * as path from "path";
+import * as fs from "fs";
 
 import dotenv = require("dotenv");
 require('./config/alias')
@@ -8,6 +9,7 @@ dotenv.config({
   silent: true,
   path: path.join(__dirname, "../.env")
 });
+
 const environment = process.env.NODE_ENV;
 import expressConfig from "./config/express";
 import {initialize} from "./config/controllerManager";
@@ -16,17 +18,19 @@ import {AuthController} from "./controllers/authController";
 import { ApiController } from "./controllers/ApiController";
 
 import * as passport from "./config/passport/passport"
-
+import debug from 'debug';
+const log = debug('app:server:startup');
 
 const server: express.Express = express();
 var port = process.env.PORT || 3000;
 
-expressConfig(server);
+expressConfig(server, port);
 
 var rootPath = path.join(__dirname, '../../')
 if (environment === "development") {
-  console.log("---- DEVELOPMENT ENVIRONMENT ----")
-  console.log("Setting up react Hot module reloader, please wait...")
+
+  log("---- DEVELOPMENT ENVIRONMENT ----")
+  log("Setting up react Hot module reloader, please wait...")
 
   const webpackHotReload:any = require("./config/middleware/webpackHotReload");
   webpackHotReload.default(server, path.join(rootPath, 'webpack.config.js'));
@@ -48,4 +52,5 @@ initialize(server,
   passport.configureRoutes(server);
   expressController(server, {port, rootPath});
 });
+
 export default server;

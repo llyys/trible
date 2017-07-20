@@ -25,7 +25,7 @@ export function createEngine(engineOptions) {
         }
 
         res.setHeader('Content-Type', 'text/html')
-        res.setHeader('Content-Length', Buffer.byteLength(markup))  
+        res.setHeader('Content-Length', Buffer.byteLength(markup))  //maybe add streaming support?
       }
 
     } catch (e) {

@@ -29,7 +29,9 @@ export function configureRoutes(app:Express){
 }
 
 export async function onAuthenticationCompleted(req:Express.Request, profile:IUserProfile){
-  return;
+  
+  
+    return;
 }
 
 export function oauthCallback(strategy) {
@@ -48,6 +50,18 @@ export function oauthCallback(strategy) {
         })(req, res, next);
     };
 };
+
+export function registerAuthenticationRouter(router, mode){
+    router.get(`/`, passport.authenticate(mode));
+    
+    router.get('/callback',
+    passport.authenticate(mode, { failureRedirect: `/auth/login?err=${mode}`, session: false}),
+    (req, res, next) => {
+        console.log('onAuthSuccess')
+        //onAuthSuccess(mode, req, res, next)
+    }
+    );
+}
 
 
 export interface IUserProfile{

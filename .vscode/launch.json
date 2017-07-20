@@ -13,7 +13,8 @@
       "cwd": "${workspaceRoot}",
       "outFiles": ["${workspaceRoot}/build/server/**/*.js"],
       "env": {
-        "NODE_ENV": "development"
+        "NODE_ENV": "development",
+        "DEBUG": "app:*"
       },
       "runtimeArgs": [
         "--nolazy", "--harmony"

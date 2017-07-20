@@ -1,0 +1,8 @@
+{
+  "passport" : {
+      "twitter" : {
+        "clientID": "123",
+        "clientSecret":"123"
+      }
+    }
+}

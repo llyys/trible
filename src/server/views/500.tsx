@@ -7,7 +7,7 @@ interface ErrorProps extends ReactProps{
 class ErrorPage extends React.Component<ErrorProps, any> {
   render(){
     return (
-      <Html>
+      <Html state={{server:true}}>
         <div className="error">
           <h1>
             {this.props.error.message}

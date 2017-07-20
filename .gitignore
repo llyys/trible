@@ -21,3 +21,5 @@ public/build/**
 /typings/globals
 /build/**
 /build
+/config/development.json
+/config/production.json

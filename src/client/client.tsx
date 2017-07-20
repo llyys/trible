@@ -17,7 +17,7 @@ require("~/style/global");
 const rootElement = document.getElementById("root");
 let currentLocation = history.location;
 const context = {
-  state: {}
+  state: {server:false}
 };
 
 
@@ -39,12 +39,13 @@ history.listen((location, action) => {
 });
 const render = async () => {
   try {
-
+    if(context.state.server){
+      return;
+    }
 
   const routeContext = {
       ...context,
       path: location.pathname,
-
       query: queryString.parse(location.search),
     }
   route = await router.resolve(routeContext);
