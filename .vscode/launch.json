@@ -33,7 +33,19 @@
       "type": "node",
       "request": "launch",
       "name": "Launch task",
-      "program": "${workspaceRoot}/tools/build-css.js"
+      "program": "${workspaceRoot}/tools/db.js",
+      "args": [
+        "up"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "db up",
+      "program": "${workspaceRoot}/tools/db.js",
+      "args": [
+        "up", "--dry-run"
+      ]
     },
     {
       "name": "Attach",
