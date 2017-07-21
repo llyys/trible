@@ -11,14 +11,33 @@ var {Table} = require("./lib/dbHelper")
   * This enables us to not have to rely on NODE_PATH.
   */
 exports.setup = function(options, seedLink) {
+  console.log('setting up')
+  
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
 
-exports.up = async function(db) {
+// function getMethods(obj) {
+//   var result = [];
+//   for (var id in obj) {
+//     try {
+//       if (typeof(obj[id]) == "function") {
+//         result.push(id + ": " + obj[id].toString());
+//       }
+//     } catch (err) {
+//       result.push(id + ": inaccessible");
+//     }
+//   }
+//   return result;
+// }
 
+exports.up = async(db:Database) => {
+  
+  //console.log(getMethods(db).join("\n"))
+  console.log('running up')
   let tableUsers = new Table(db, 'users');
+  await tableUsers.createSequence()
   await tableUsers.create({
     id: { type: 'int', primaryKey: true },
     displayName: 'string',
@@ -27,7 +46,7 @@ exports.up = async function(db) {
 
   let tableUsersProfile = new Table(db,'users_profile')
   await tableUsersProfile.create({
-    id: { type: 'int', primaryKey: true },
+    id: { type: 'int', primaryKey: true, defaultValue:"nextval('users_profile_id_seq')" },
     displayName: 'string',
     provider: 'string',
     data: 'json',
@@ -35,7 +54,7 @@ exports.up = async function(db) {
   });
 
   console.log("running this")
-  debugger;
+  // debugger;
 };
 
 exports.down = function(db) {

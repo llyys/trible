@@ -44,7 +44,7 @@
       "name": "db up",
       "program": "${workspaceRoot}/tools/db.js",
       "args": [
-        "up", "--dry-run"
+        "up", "--dry-run", "--verbose"
       ]
     },
     {

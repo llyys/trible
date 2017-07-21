@@ -18,7 +18,7 @@ module.exports = task('db-migrate', (args) => {
           "database": dbConfig.database
         }
       }
-      //, plugins:{'migrator:migration:hook:require':[tsPlugin]}
+      , plugins:{'migrator:migration:hook:require':[tsPlugin]}
     }
     var dbm = DBMigrate.getInstance(true, conf, specialCallback);
     dbm.registerAPIHook().then(()=>
@@ -40,25 +40,13 @@ function specialCallback(migrator, originalError) {
 
 
 const tsPlugin = {
-
-  loadPlugin: function() {
-    debugger;
-    module.exports = Object.assign(module.exports, {
-
       'migrator:migration:hook:require': function() {
-      debugger;
         // We use ts-node because the official TypeScript module does not implement the register() method
-        require('ts-node/register');
-
-        /**
-          * Return value of this hook can be either a pure value or a Promise.
-          */
+        require('ts-helpers'); //so we could use the async/await
+        require('ts-node').register({ compilerOptions: {"importHelpers": true} })
         return {
           extensions: 'ts'
         };
       }
-    });
-
-    delete module.exports.loadPlugin;
-  }
-};
+    };
+  
