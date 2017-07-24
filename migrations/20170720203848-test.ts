@@ -4,8 +4,8 @@ var dbm;
 var type;
 var seed;
 
-var {Table} = require("./lib/dbHelper")
-
+//var {Table} = require("./lib/dbHelper")
+import * as utils from "./lib/dbHelper";
 /**
   * We receive the dbmigrate dependency from dbmigrate initially.
   * This enables us to not have to rely on NODE_PATH.
@@ -18,46 +18,43 @@ exports.setup = function(options, seedLink) {
   seed = seedLink;
 };
 
-// function getMethods(obj) {
-//   var result = [];
-//   for (var id in obj) {
-//     try {
-//       if (typeof(obj[id]) == "function") {
-//         result.push(id + ": " + obj[id].toString());
-//       }
-//     } catch (err) {
-//       result.push(id + ": inaccessible");
-//     }
-//   }
-//   return result;
-// }
-
 exports.up = async(db:Database) => {
-  
-  //console.log(getMethods(db).join("\n"))
-  console.log('running up')
-  let tableUsers = new Table(db, 'users');
-  await tableUsers.createSequence()
-  await tableUsers.create({
-    id: { type: 'int', primaryKey: true },
-    displayName: 'string',
-    users_profile_id: 'int'
-  })
+  utils.runListOfqueries(db, 
+    `CREATE OR REPLACE FUNCTION now_utc() RETURNS TIMESTAMP as $$
+      SELECT now() at time zone 'utc';
+    $$ language sql;`,
+    
+    `CREATE SEQUENCE users_id_seq`,
+    `CREATE TABLE users
+    (
+        users_id BIGINT PRIMARY KEY NOT NULL default nextval('users_id_seq'),
+        displayName TEXT,
+        media_url TEXT,
+        created_dt TIMESTAMP DEFAULT now_utc() NOT NULL,
+        created_by TEXT
+    )
+    `,
 
-  let tableUsersProfile = new Table(db,'users_profile')
-  await tableUsersProfile.create({
-    id: { type: 'int', primaryKey: true, defaultValue:"nextval('users_profile_id_seq')" },
-    displayName: 'string',
-    provider: 'string',
-    data: 'json',
-    user_id: 'int',
-  });
+    `CREATE SEQUENCE users_profile_id_seq`,
+    `CREATE TABLE users_profile
+    (
+        users_profile_id BIGINT PRIMARY KEY NOT NULL default nextval('users_profile_id_seq'),
+        users_id BIGINT REFERENCES users,
+        displayName TEXT,
+        username TEXT,
+        provider TEXT,
+        providerData JSON,
+        created_dt TIMESTAMP DEFAULT now_utc() NOT NULL,
+        created_by TEXT
+    )
+    `
+  )
 
   console.log("running this")
   // debugger;
 };
 
-exports.down = function(db) {
+exports.down = async(db) => {
   return null;
 };
 
