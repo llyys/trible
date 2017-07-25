@@ -24,7 +24,7 @@ const log = debug('app:server:startup');
 const server: express.Express = express();
 var port = process.env.PORT || 3000;
 
-expressConfig(server, port);
+expressConfig(server);
 
 var rootPath = path.join(__dirname, '../../')
 if (environment === "development") {
@@ -46,7 +46,7 @@ var publicPath = path.join(rootPath, "public");
 //server.use("/public", express.static(publicPath));
 server.use('/public', express.static(path.join(rootPath, "/build/public")));
 
-initialize(server, 
+initialize(server,
   [AuthController, ApiController]
 ).then(()=>{
   passport.configureRoutes(server);

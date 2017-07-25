@@ -61,6 +61,7 @@
     "dotenv": "^4.0.0",
     "etag": "^1.8.0",
     "express": "^4.15.3",
+    "express-session": "^1.15.4",
     "extract-css-module-classnames-loader": "^0.4.0",
     "extract-text-webpack-plugin": "^3.0.0-beta.3",
     "fresh": "^0.5.0",
@@ -92,9 +93,9 @@
     "tsc-watch": "^1.0.7",
     "tslib": "^1.7.1",
     "typescript": "^2.4.1",
-    "webpack": "^3.0.0",
-    "webpack-dev-middleware": "^1.10.2",
-    "webpack-hot-middleware": "^2.18.0",
-    "webpack-manifest-plugin": "^1.1.0"
+    "webpack": "^3.4.0",
+    "webpack-dev-middleware": "^1.11.0",
+    "webpack-hot-middleware": "^2.18.2",
+    "webpack-manifest-plugin": "^1.2.1"
   }
 }

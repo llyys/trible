@@ -33,6 +33,7 @@
   },
   "exclude": [
     "build",
+    "migrations",
     "node_modules",
     "webpack.config.js"
   ]
