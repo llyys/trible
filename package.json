@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node tools/build",
     "rebuild": "npm run clean && node tools/build-all",
-    "start": "tsc && node build/server/server.js",
+    "server": "tsc && node build/server/server.js",
     "tsc": "tsc",
     "dev": "webpack && tsc-watch --onSuccess \"node build/server/server.js\"",
     "clean": "rimraf build",
@@ -68,6 +68,7 @@
     "glob": "^7.1.2",
     "helmet": "^3.6.1",
     "jest": "^20.0.4",
+    "jsonwebtoken": "^7.4.1",
     "mkdirp": "^0.5.1",
     "module-alias": "^2.0.0",
     "node-sass": "^4.5.3",
