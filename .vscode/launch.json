@@ -19,6 +19,9 @@
       "runtimeArgs": [
         "--nolazy", "--harmony"
       ],
+      "args": [
+        "--colors"
+      ],
       "protocol": "inspector",
       "preLaunchTask": "tsc",
       "sourceMaps": true

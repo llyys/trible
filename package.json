@@ -13,7 +13,8 @@
     "webpack": "node tools\tasks\build",
     "stats": "webpack --env production --profile --json > stats.json",
     "tcm": "tcm -p src/**/*.scss",
-    "db-up": "node_modules/db-migrate/bin/db-migrate up --config src/config/database.json -v --migrations-dir ./migrate/migrations -e prod",
+    "db-up": "node tools/db up",
+    "db-create": "node tools/db create",
     "test": "jest",
     "server:dev": "tsc && "
   },
@@ -34,6 +35,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "core-js": "^2.4.1",
     "history": "^4.6.3",
     "query-string": "^4.3.4",
     "react": "^15.6.1",
@@ -80,6 +82,8 @@
     "passport-linkedin": "^1.0.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
+    "pg-monitor": "^0.8.2",
+    "pg-promise": "^6.3.6",
     "postcss-global-import": "^1.0.1",
     "postcss-loader": "^2.0.6",
     "postcss-modules": "^0.8.0",

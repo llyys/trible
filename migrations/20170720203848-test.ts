@@ -12,26 +12,25 @@ import * as utils from "./lib/dbHelper";
   */
 exports.setup = function(options, seedLink) {
   console.log('setting up')
-  
+
   dbm = options.dbmigrate;
   type = dbm.dataType;
   seed = seedLink;
 };
 
-exports.up = async(db:Database) => {
-  utils.runListOfqueries(db, 
+exports.up = async(db) => {
+  return utils.runListOfqueries(db,
     `CREATE OR REPLACE FUNCTION now_utc() RETURNS TIMESTAMP as $$
       SELECT now() at time zone 'utc';
     $$ language sql;`,
-    
+
     `CREATE SEQUENCE users_id_seq`,
     `CREATE TABLE users
     (
         users_id BIGINT PRIMARY KEY NOT NULL default nextval('users_id_seq'),
         displayName TEXT,
-        media_url TEXT,
-        created_dt TIMESTAMP DEFAULT now_utc() NOT NULL,
-        created_by TEXT
+        avatar TEXT,
+        created_dt TIMESTAMP DEFAULT now_utc() NOT NULL
     )
     `,
 
@@ -39,23 +38,25 @@ exports.up = async(db:Database) => {
     `CREATE TABLE users_profile
     (
         users_profile_id BIGINT PRIMARY KEY NOT NULL default nextval('users_profile_id_seq'),
-        users_id BIGINT REFERENCES users,
-        displayName TEXT,
+        users_id BIGINT REFERENCES users NOT NULL,
         username TEXT,
-        provider TEXT,
-        providerData JSON,
-        created_dt TIMESTAMP DEFAULT now_utc() NOT NULL,
-        created_by TEXT
+        provider TEXT NOT NULL,
+        providerId TEXT NOT NULL,
+        providerData JSON NOT NULL,
+        created_dt TIMESTAMP DEFAULT now_utc() NOT NULL
     )
     `
   )
 
-  console.log("running this")
-  // debugger;
 };
 
 exports.down = async(db) => {
-  return null;
+  return utils.runListOfqueries(db
+    , `DROP SEQUENCE users_id_seq`
+    , `DROP SEQUENCE users_profile_id_seq`
+    , `DROP TABLE users_profile`
+    , `DROP TABLE users`
+  );
 };
 
 exports._meta = {

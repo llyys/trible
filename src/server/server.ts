@@ -7,7 +7,6 @@ require('./config/alias'); // this must be in the beginning
 import logger from '~/lib/Logger';
 const log = logger.get(module);
 
-
 const environment = process.env.NODE_ENV;
 import expressConfig from "./config/express";
 import {initialize} from "./config/controllerManager";
@@ -16,8 +15,6 @@ import {AuthController} from "./controllers/authController";
 import { ApiController } from "./controllers/ApiController";
 
 import * as passport from "./config/passport/passport"
-import debug from 'debug';
-//const log = debug('app:server:startup');
 
 const server: express.Express = express();
 var port = process.env.PORT || 3000;

@@ -16,7 +16,7 @@ export class AuthController{
   @Get("/token")
   token(req:Request, res:Response){
     console.log('token');
-    const user = {id:10}
+    const user = req.user;
     const token = jwtMiddleware.generateToken(user);
     res.json({
       user,

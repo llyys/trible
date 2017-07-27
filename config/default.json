@@ -1,15 +1,15 @@
 {
-  "passport" : {
-      "twitter" : {
-        "clientID": "123",
-        "clientSecret":"123"
-      }
-    },
-    "db":{
-      "database":"trible",
-      "user":"postgres",
-      "password":"postgres",
-      "host":"localhost",
-      "port":"5432"
+  "passport": {
+    "twitter": {
+      "clientID": "123",
+      "clientSecret": "123"
     }
+  },
+  "db": {
+    "database": "trible",
+    "user": "postgres",
+    "password": "postgres",
+    "host": "localhost",
+    "port": "5432"
+  }
 }
