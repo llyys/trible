@@ -22,8 +22,10 @@ export default (app, {port, rootPath}) => {
         res: res,
         path: req.url,
         env: "server",
-        store: {}
+        store: {token:{}}
       };
+
+      //context.store.token = req["session"];
 
       let route = await router.resolve(context);
       res.render("Page", {component:route.component, state:context.store, req, res})
@@ -37,6 +39,8 @@ export default (app, {port, rootPath}) => {
   //Global error handler
   app.use(function(err, req, res, next) {
     // log it
+    if (req.complete)
+      return;
     console.log(`global error`);
     if (!module.parent) console.error(err.stack);
 

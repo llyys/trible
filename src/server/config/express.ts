@@ -6,8 +6,10 @@ import * as path from "path";
 import * as session from "express-session";
 import * as express from "express";
 import * as passport from "passport";
+import db = require("~/server/db");
+import { PgSessionStore } from "~/server/config/expressPgSessionStore";
 
-export default app => {
+export default (app: express.Express) => {
   app.set("view engine", "js");
   app.engine("js", reactView.createEngine({}));
   const viewsPath = path.join(__dirname, "../views");
@@ -19,14 +21,21 @@ export default app => {
 
   //Help secure Express apps with various HTTP headers
   app.use(helmet());
+  const sess = session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true,
+    store: new PgSessionStore(db, session, {})
+  });
 
-  app.use(
-    session({
-      secret: "keyboard cat",
-      resave: true,
-      saveUninitialized: true
-    })
-  );
+  const urlsThatDontNeedSession = /((\/__webpack_hmr)|(\.(js|css|ico)))/
+  app.use((req, res, next) => {
+    if (urlsThatDontNeedSession.test(req.url)) {
+      next();
+    } else {
+      sess(req, res, next);
+    }
+  });
   app.use(passport.initialize());
   app.use(passport.session());
   // app.on('error', onError); <- TODO

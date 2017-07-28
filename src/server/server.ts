@@ -41,6 +41,7 @@ var publicPath = path.join(rootPath, "public");
 //server.use("/public", express.static(publicPath));
 server.use('/public', express.static(path.join(rootPath, "/build/public")));
 
+
 initialize(server,
   [AuthController, ApiController]
 ).then(()=>{
