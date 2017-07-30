@@ -1,8 +1,8 @@
 import db = require("~/server/db");
 import { IDatabase, IMain, IBaseProtocol } from "pg-promise";
 import { EventEmitter } from "events";
-import * as session from 'express-session';
-import logger from '~/lib/Logger';
+import * as session from "express-session";
+import logger from "~/lib/Logger";
 const log = logger.get(module);
 
 type Callback = (err?: Error, result?: any) => any;
@@ -26,65 +26,69 @@ export class PgSessionStore extends session.Store {
   }
 
   get(sid: string, fn: Callback) {
-    try {
-      log.debug(`Loading session ${sid} from store `)
-      let now = this.currentTimestamp();
-      db.oneOrNone(
-        `SELECT sess FROM ${this.table}
+    log.debug(`Loading session ${sid} from store `);
+    let now = this.currentTimestamp();
+    db.oneOrNone(
+      `SELECT sess FROM ${this.table}
          where sid=$1 AND expire >= to_timestamp($2)`,
-        [sid, now]
-        , (result) => {
-          if (result) return fn && fn(null, result.sess);
-          if (fn) fn();
-      });
-    } catch (e) {
-      if (fn) fn(e);
-    }
+      [sid, now],
+      result => {
+        if (result) return fn && fn(null, result.sess);
+        if (fn) {
+          fn(null, { cookie: {} }); //return empty session, otherwize express will generate a new one...
+        }
+      }
+    );
   }
 
   serialize(sess) {
-    JSON.stringify(sess, function (key, val) {
+    JSON.stringify(sess, function(key, val) {
       // ignore sess.cookie property
-      if (this === sess && key === 'cookie') {
-        return
+      if (this === sess && key === "cookie") {
+        return;
       }
-
-      return val
-    })
+      return val;
+    });
   }
 
+  private async createOrUpdate(sid: string, sess: any, expireTime: any) {
+    //new pg9.5 feature
+    await db.none(
+      `INSERT INTO ${this.table} (sid, sess, expire)
+         VALUES ($(sid), $(sess), to_timestamp($(expireTime)))
+         ON CONFLICT
+         DO UPDATE ${this.table}
+         SET sess = $(sess), expire = to_timestamp($(expireTime))
+         WHERE sid = $(sid)
+         `,
+      { sid, sess, expireTime }
+    );
+    return;
 
-  async set(sid: string, session: any, fn: Callback) {
-    try {
-      const expireTime = this.getExpireTime(session.cookie.maxAge);
-      let sess = this.serialize(session);
-      if (!sess) {
-        fn.apply(this, arguments);
-        return;
-      }
-      let result = await db.oneOrNone(
-        `UPDATE ${this.table}
-          SET sess = $1, expire = to_timestamp($2)
-          WHERE sid = $3 RETURNING sid`,
-        [sess, expireTime, sid]
-      );
-      if (result) {
-        if (fn) {
-          fn.apply(this, arguments);
-        }
-        return;
-      }
-      await db.none(
-        `INSERT INTO ${this.table} (sid, sess, expire)
-         VALUES ($(sid), $(sess), to_timestamp($(expireTime)))`,
-        { sid, sess, expireTime }
-      );
-      if (fn) {
-        fn.apply(this, arguments);
-      }
-    } catch (e) {
-      if (fn) fn(e);
+    // let result = await db.oneOrNone(
+    //   `UPDATE ${this.table}
+    //     SET sess = $1, expire = to_timestamp($2)
+    //     WHERE sid = $3 RETURNING sid`,
+    //   [sess, expireTime, sid]
+    // );
+    // if (result) {
+    //   return;
+    // }
+    // await db.none(
+    //   `INSERT INTO ${this.table} (sid, sess, expire)
+    //    VALUES ($(sid), $(sess), to_timestamp($(expireTime)))`,
+    //   { sid, sess, expireTime }
+    // );
+  }
+
+  set(sid: string, session: any, fn: Callback) {
+    const expireTime = this.getExpireTime(session.cookie.maxAge);
+    let sess = this.serialize(session);
+    if (!sess) {
+      fn();
+      return;
     }
+    this.createOrUpdate(sid, session, expireTime).then(() => fn());
   }
 
   touch(sid: string, session: any, fn: Callback) {
@@ -115,6 +119,8 @@ export class PgSessionStore extends session.Store {
 
   dbCleanup(store) {
     var now = new Date().getTime();
-    this.db.none(`DELETE FROM ${this.table} WHERE to_timestamp($1) > expire`, [now]);
+    this.db.none(`DELETE FROM ${this.table} WHERE to_timestamp($1) > expire`, [
+      now
+    ]);
   }
 }

@@ -17,18 +17,20 @@ export default (app: express.Express) => {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-  app.use(cookieParser());
+  const secret = "keyboard cat";
+  app.use(cookieParser(secret));
 
   //Help secure Express apps with various HTTP headers
   app.use(helmet());
   const sess = session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: true,
+    secret: secret,
+    key: "sid",
+    //resave: false,
+    //saveUninitialized: false
     store: new PgSessionStore(db, session, {})
   });
 
-  const urlsThatDontNeedSession = /((\/__webpack_hmr)|(\.(js|css|ico)))/
+  const urlsThatDontNeedSession = /((\/__webpack_hmr)|(\.(js|css|ico)))/;
   app.use((req, res, next) => {
     if (urlsThatDontNeedSession.test(req.url)) {
       next();
@@ -38,6 +40,14 @@ export default (app: express.Express) => {
   });
   app.use(passport.initialize());
   app.use(passport.session());
+
+  app.all("*", function(req: any, res, next) {
+    if (req.session) {
+      console.log(req.session);
+      console.log(req.sessionID);
+    }
+    next(); // pass control to the next handler
+  });
   // app.on('error', onError); <- TODO
 };
 

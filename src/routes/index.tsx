@@ -7,24 +7,21 @@ import page500 from "./500";
 import home from "./modules/home";
 import admin from "./modules/admin";
 import about from "./about";
-import Page from '~/client/Page';
-import login from './login';
+import Page from "~/client/Page";
+import login from "./login";
 const routes: Array<IRoute> = [];
 
 export default {
   path: "/",
 
   // Keep in mind, routes are evaluated in order
-  children: [
-    home,
-    admin,
-    about,
-    login,
-    page500,
-    page404
-  ],
+  children: [home, admin, about, login, page500, page404],
 
-
+  getInitialProps: async ({ req, state }) => {
+    if (req) {
+      state.session = { sessionID: req.sessionID };
+    }
+  },
 
   async action({ next, url }) {
     //middleware

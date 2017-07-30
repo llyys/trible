@@ -1,14 +1,13 @@
 import * as express from "express";
 import * as path from "path";
-import * as glob from 'glob';
-import * as fs from 'fs';
+import * as glob from "glob";
+import * as fs from "fs";
 
 import routes from "~/routes";
 import { serverRouter } from "~/server/config/serverRouter";
 
 const router = serverRouter(routes);
-export default (app, {port, rootPath}) => {
-
+export default (app, { port, rootPath }) => {
   app.get("/*", async function(req: express.Request, res, next) {
     try {
       if (req.url.endsWith("hot-update.json")) {
@@ -22,14 +21,18 @@ export default (app, {port, rootPath}) => {
         res: res,
         path: req.url,
         env: "server",
-        store: {token:{}}
+        state: { route: {} }
       };
 
       //context.store.token = req["session"];
 
       let route = await router.resolve(context);
-      res.render("Page", {component:route.component, state:context.store, req, res})
-
+      res.render("Page", {
+        component: route.component,
+        state: context.state,
+        req,
+        res
+      });
     } catch (err) {
       console.log(err);
       next();
@@ -39,13 +42,12 @@ export default (app, {port, rootPath}) => {
   //Global error handler
   app.use(function(err, req, res, next) {
     // log it
-    if (req.complete)
-      return;
+    if (req.complete) return;
     console.log(`global error`);
     if (!module.parent) console.error(err.stack);
 
     // error page
-    res.status(500).render("500", {error:err});
+    res.status(500).render("500", { error: err });
   });
 
   // assume 404 since no middleware responded
@@ -59,17 +61,16 @@ export default (app, {port, rootPath}) => {
     clenupHotUpdateFiles();
   });
 
-
   function clenupHotUpdateFiles() {
     const appPath = path.join(rootPath, "/build/public");
     glob(appPath + "/*.hot-update.*", (err, files) => {
-       files.forEach(function(item,index,array){
-            //console.log(item + " found");
-          fs.unlink(item, function(err){
-                if (err) throw err;
-                console.log(item + " deleted");
-          });
-       });
-    })
+      files.forEach(function(item, index, array) {
+        //console.log(item + " found");
+        fs.unlink(item, function(err) {
+          if (err) throw err;
+          console.log(item + " deleted");
+        });
+      });
+    });
   }
 };

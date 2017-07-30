@@ -10,7 +10,7 @@ export function serverRouter(routes) {
         ).then(props => {
           context.props = props;
           if (props) {
-            context.store[context.route.path] = props;
+            context.state.route[context.route.path] = props;
           }
           return context.route.action(context, params);
         });
