@@ -20,31 +20,34 @@ export class PgSessionStore extends session.Store {
   options: any;
   table: string;
 
-  async destroy(sid: string, fn: Callback) {
-    await db.none(`DELETE FROM ${this.table} where sid=$1`, sid);
-    if (fn) fn();
+  destroy(sid: string, fn: Callback) {
+    db
+      .none(`DELETE FROM ${this.table} where sid=$1`, sid)
+      .then(() => fn(null, null));
   }
 
   get(sid: string, fn: Callback) {
     log.debug(`Loading session ${sid} from store `);
     let now = this.currentTimestamp();
-    db.oneOrNone(
-      `SELECT sess FROM ${this.table}
+    db
+      .oneOrNone(
+        `SELECT sess FROM ${this.table}
          where sid=$1 AND expire >= to_timestamp($2)`,
-      [sid, now],
-      result => {
-        if (result) return fn && fn(null, result.sess);
-        if (fn) {
-          fn(null, { cookie: {} }); //return empty session, otherwize express will generate a new one...
+        [sid, now]
+      )
+      .then(res => {
+        if (res) {
+          let sess = { cookie: {}, ...res.sess };
+          return fn(null, sess);
         }
-      }
-    );
+        fn(null, { cookie: {} });
+      });
   }
 
   serialize(sess) {
-    JSON.stringify(sess, function(key, val) {
+    return JSON.stringify(sess, function(key, val) {
       // ignore sess.cookie property
-      if (this === sess && key === "cookie") {
+      if (key === "cookie") {
         return;
       }
       return val;
@@ -52,14 +55,12 @@ export class PgSessionStore extends session.Store {
   }
 
   private async createOrUpdate(sid: string, sess: any, expireTime: any) {
-    //new pg9.5 feature
+    //new pg9.5 feature UPSERT
     await db.none(
       `INSERT INTO ${this.table} (sid, sess, expire)
          VALUES ($(sid), $(sess), to_timestamp($(expireTime)))
-         ON CONFLICT
-         DO UPDATE ${this.table}
-         SET sess = $(sess), expire = to_timestamp($(expireTime))
-         WHERE sid = $(sid)
+      ON CONFLICT (sid) DO
+         UPDATE SET sess = $(sess), expire = to_timestamp($(expireTime))
          `,
       { sid, sess, expireTime }
     );
@@ -84,24 +85,23 @@ export class PgSessionStore extends session.Store {
   set(sid: string, session: any, fn: Callback) {
     const expireTime = this.getExpireTime(session.cookie.maxAge);
     let sess = this.serialize(session);
-    if (!sess) {
+    if (sess === "{}") {
       fn();
       return;
     }
-    this.createOrUpdate(sid, session, expireTime).then(() => fn());
+    this.createOrUpdate(sid, sess, expireTime).then(() => fn());
   }
 
   touch(sid: string, session: any, fn: Callback) {
     const expireTime = this.getExpireTime(session.cookie.maxAge);
 
-    db.oneOrNone(
-      `UPDATE ${this.table}
+    db
+      .oneOrNone(
+        `UPDATE ${this.table}
        SET expire = to_timestamp($1) WHERE sid = $2 RETURNING sid`,
-      [expireTime, sid],
-      function(err) {
-        fn(err);
-      }
-    );
+        [expireTime, sid]
+      )
+      .catch(err => fn(err));
   }
 
   private currentTimestamp() {

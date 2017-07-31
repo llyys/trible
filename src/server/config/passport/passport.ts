@@ -38,7 +38,7 @@ export async function onAuthenticationCompleted(
     await appendProfileToExistingUser(req.user, profile);
     return user;
   } else {
-    user = await createNewUserWithProfile(profile);
+    req.user = user = await createNewUserWithProfile(profile);
 
     // const loginAsync = promisify(req.login);
     // await loginAsync(user);
@@ -68,15 +68,14 @@ export function oauthCallback(strategy) {
   return function(req, res, next) {
     passport.authenticate(strategy, function(err, user, redirectURL) {
       if (err || !user) {
-        return res.redirect("/#!/signin");
+        throw err;
+        //return res.redirect("/#!/signin");
       }
-      req.login(user, function(err) {
-        if (err) {
-          return res.redirect("/#!/signin");
-        }
+      let session = req.session;
+      session.user = user;
+      delete session[`oauth:${strategy}`]; //remove oauth:twitter property form session
 
-        return res.redirect(redirectURL || "/");
-      });
+      return res.redirect(redirectURL || "/");
     })(req, res, next);
   };
 }

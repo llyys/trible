@@ -10,15 +10,16 @@ export default new Router(routes, {
 
     //this function will be rendered only once for initial props loading no more!
     if (typeof route.getInitialProps === "function" && !route.props) {
-      return new Promise((resolve, reject) => {
-        // to make sure that when there is server side props, we don't invoke getInitialProps from client side
-        let serverPathProps =
-          context.state &&
-          context.state.route &&
-          context.state.route[route.path];
-        return resolve(serverPathProps || route.getInitialProps(context));
-      }).then(props => {
-        route.props = context.props = props;
+      //return new Promise((resolve, reject) => {
+      // to make sure that when there is server side props, we don't invoke getInitialProps from client side
+      let props =
+        context.state && context.state.route && context.state.route[route.path];
+
+      let state = objectWithoutKey(context.state, "route");
+      const serverProps = { props, state };
+
+      return route.getInitialProps(serverProps).then(props => {
+        route.props = context.props = props || {};
         return route.action(context, params);
       });
     }
@@ -29,3 +30,12 @@ export default new Router(routes, {
     return null;
   }
 });
+
+const objectWithoutKey = (object, key) => {
+  return Object.keys(object).reduce((result, propName) => {
+    if (propName !== key) {
+      result[propName] = object[propName];
+    }
+    return result;
+  }, {});
+};

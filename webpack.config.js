@@ -126,7 +126,7 @@ const config = {
     strictExportPresence: true,
     rules: [
       {
-        test: /\.tsx$/,
+        test: /\.tsx?$/,
         exclude: ["/node_modules/", `${SERVER_DIR}/**`],
         use: [
           { loader: "react-hot-loader/webpack" },

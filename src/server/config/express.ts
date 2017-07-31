@@ -25,17 +25,24 @@ export default (app: express.Express) => {
   const sess = session({
     secret: secret,
     key: "sid",
-    //resave: false,
+    resave: false,
     //saveUninitialized: false
     store: new PgSessionStore(db, session, {})
   });
 
   const urlsThatDontNeedSession = /((\/__webpack_hmr)|(\.(js|css|ico)))/;
-  app.use((req, res, next) => {
+  app.use((req: any, res, next) => {
     if (urlsThatDontNeedSession.test(req.url)) {
       next();
     } else {
-      sess(req, res, next);
+      sess(req, res, () => {
+        let session = req.session;
+        if (session && session.user) {
+          req.user = session.user;
+        }
+        next();
+      });
+      // sess(req, res, next);
     }
   });
   app.use(passport.initialize());

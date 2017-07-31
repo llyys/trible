@@ -2,6 +2,8 @@ import * as express from "express";
 import * as path from "path";
 import * as glob from "glob";
 import * as fs from "fs";
+import logger from "~/lib/Logger";
+const log = logger.get("global");
 
 import routes from "~/routes";
 import { serverRouter } from "~/server/config/serverRouter";
@@ -42,10 +44,10 @@ export default (app, { port, rootPath }) => {
   //Global error handler
   app.use(function(err, req, res, next) {
     // log it
-    if (req.complete) return;
-    console.log(`global error`);
-    if (!module.parent) console.error(err.stack);
-
+    log.error(err.stack);
+    if (res.headersSent) {
+      return next(err);
+    }
     // error page
     res.status(500).render("500", { error: err });
   });

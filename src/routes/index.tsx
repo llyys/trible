@@ -9,6 +9,9 @@ import admin from "./modules/admin";
 import about from "./about";
 import Page from "~/client/Page";
 import login from "./login";
+
+import profileStore from "~/client/stores/profileStore";
+
 const routes: Array<IRoute> = [];
 
 export default {
@@ -19,8 +22,11 @@ export default {
 
   getInitialProps: async ({ req, state }) => {
     if (req) {
-      state.session = { sessionID: req.sessionID };
+      //on server side
+      return (state.session = { sessionID: req.sessionID, user: req.user });
     }
+    state.store.profileStore = profileStore;
+    profileStore.currentUser(state.session.user);
   },
 
   async action({ next, url }) {
