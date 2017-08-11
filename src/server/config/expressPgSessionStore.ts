@@ -101,6 +101,7 @@ export class PgSessionStore extends session.Store {
        SET expire = to_timestamp($1) WHERE sid = $2 RETURNING sid`,
         [expireTime, sid]
       )
+      .then(() => fn(null))
       .catch(err => fn(err));
   }
 
